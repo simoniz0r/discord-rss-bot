@@ -125,7 +125,7 @@ function postfeed {
     # use grep to get rid of everything except the description then use sed to get rid of the Description label and replace new lines with '\n'
     # also use recode to turn html escapes into normal symbols then use sed to replace a couple of weird ones that recode adds
     FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link' | grep -v '^Pub.date' \
-    | sed "s%Description: %%" | recode h4 | sed 's%^.*%&\\n%g;s%â %%g;s%Â%%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ')"
+    | sed "s%Description: %%" | recode h4 | sed 's%^.*%&\\n%g;s%â %%g;s%Â%%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ' | tr -d '\r')"
     # skip posting certain feeds
     case "$FEED_TITLE" in
         # dont post LWN.net paid articles
