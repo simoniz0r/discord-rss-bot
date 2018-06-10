@@ -36,13 +36,13 @@ WEBHOOK_URL="webhook_url1,webhook_url2"
 # time to sleep between checking feeds
 RSS_CHECK_TIME=300
 # max amount of characters to be sent in embed description (Discord's max is 2048)
-CHARACTER_LIMIT=610
+CHARACTER_LIMIT=700
 # run a for loop that checks the Pub.date of each feed in RSS_FEEDS
 function checkfeeds {
     mkdir -p ~/.cache/discord-rss
     for feed in $RSS_FEEDS; do
         # unset used variables
-        unset FEED_URL FEED_NAME BOT_USERNAME FEED_COLOR AVATAR_URL PUB_DATE NEW_PUB_DATE
+        unset FEED_URL FEED_NAME BOT_USERNAME FEED_COLOR AVATAR_URL POST_LINK NEW_POST_LINK
         # set FEED_URL FEED_NAME FEED_COLOR and AVATAR_URL using cut
         FEED_URL="$(echo $feed | cut -f1 -d'|')"
         FEED_NAME="$(echo $feed | cut -f2 -d'|')"
@@ -54,21 +54,14 @@ function checkfeeds {
         if [ ! -z "$(echo $feed | cut -f5 -d'|')" ]; then
             WEBHOOK_URL="$(echo $feed | cut -f5 -d'|')"
         fi
-        # if last entry from feed stored, get PUB_DATE for feed using grep and cut
+        # if last entry from feed stored, get POST_LINK for feed using grep and cut
         if [ -f "$HOME/.cache/discord-rss/$FEED_NAME" ]; then
-            PUB_DATE="$(grep -m1 '^Pub.date:' ~/.cache/discord-rss/$FEED_NAME | cut -f2- -d' ')"
+            POST_LINK="$(grep -m1 '^Link:' ~/.cache/discord-rss/$FEED_NAME | cut -f2- -d' ')"
         fi
-        # get NEW_PUB_DATE for feed using getfeed function, grep, and cut
-        NEW_PUB_DATE="$(getfeed $FEED_URL | grep -m1 '^Pub.date:' | cut -f2- -d' ')"
-        # if NEW_PUB_DATE and PUB_DATE are empty, try using 'Link' instead of 'Pub.date'
-        if [ -z "$NEW_PUB_DATE" ] && [ -z "$PUB_DATE" ]; then
-            if [ -f "$HOME/.cache/discord-rss/$FEED_NAME" ]; then
-                PUB_DATE="$(grep -m1 '^Link:' ~/.cache/discord-rss/$FEED_NAME | cut -f2- -d' ')"
-            fi
-            NEW_PUB_DATE="$(getfeed $FEED_URL | grep -m1 '^Link:' | cut -f2- -d' ')"
-        fi
-        # if NEW_PUB_DATE not empty and does not match PUB_DATE, write latest entry to ~/.cache/discord-rss/$FEED_NAME
-        if [ ! -z "$NEW_PUB_DATE" ] && [ ! "$NEW_PUB_DATE" = "$PUB_DATE" ]; then
+        # get NEW_POST_LINK for feed using getfeed function, grep, and cut
+        NEW_POST_LINK="$(getfeed $FEED_URL | grep -m1 '^Link:' | cut -f2- -d' ')"
+        # if NEW_POST_LINK not empty and does not match POST_LINK, write latest entry to ~/.cache/discord-rss/$FEED_NAME
+        if [ ! -z "$NEW_POST_LINK" ] && [ ! "$NEW_POST_LINK" = "$POST_LINK" ]; then
             echo "[$(date +'%D %T')] New post in $BOT_USERNAME"
             getfeed "$FEED_URL" > ~/.cache/discord-rss/"$FEED_NAME"
             # run a for loop to post to multiple webhook urls if present
@@ -124,8 +117,20 @@ function postfeed {
     FEED_LINK="$(grep -m1 '^Link:' ~/.cache/discord-rss/$FEED_NAME | cut -f2- -d' ')"
     # use grep to get rid of everything except the description then use sed to get rid of the Description label and replace new lines with '\n'
     # also use recode to turn html escapes into normal symbols then use sed to replace a couple of weird ones that recode adds
-    FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link' | grep -v '^Pub.date' \
-    | sed "s%Description: %%" | recode h4 | sed 's%^.*%&\\n%g;s%â %%g;s%Â%%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ' | tr -d '\r')"
+    case "$FEED_NAME" in
+        # get rid of new lines in LWN posts; too messy with them
+        LWN)
+            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link' | grep -v '^Pub.date' | sed "s%Description: %%" \
+            | recode h4 | sed 's%â %%g;s%Â%%g' | tr '\n' ' ' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' | sed '/^$/d')"
+            ;;
+        *)
+            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link' | grep -v '^Pub.date' | sed "s%Description: %%" \
+            | recode h4 | sed 's%^.*%&\\n%g;s%â %%g;s%Â%%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' | sed '/^$/d')"
+            ;;
+    esac
+    if [ ! "$(echo $FEED_DESC | tail -n 1 | rev | cut -c1)" = "." ]; then
+        FEED_DESC="$FEED_DESC[...]"
+    fi
     # skip posting certain feeds
     case "$FEED_TITLE" in
         # dont post LWN.net paid articles
@@ -139,7 +144,7 @@ function postfeed {
             curl -iL -X POST -H "Content-Type: application/json" -T "/tmp/discord-rss.json" "$UPLOAD_URL" || echo "Upload failed"
             ;;
     esac
-    rm -f /tmp/discord-rss.json
+    # rm -f /tmp/discord-rss.json
     # unset used variables
     unset FEED_TITLE FEED_LINK FEED_DESC
 }
