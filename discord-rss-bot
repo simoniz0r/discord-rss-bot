@@ -75,17 +75,22 @@ function checkfeeds {
 }
 # use rsstail to get the latest feed
 function getfeed {
+    local RSS_URL="$1"
     # reverse output for feeds that are weird and backwards
     case "$FEED_NAME" in
         openSUSE-Factory)
-            FEED_CONTENT="$(rsstail -Hd1plru "$1" -n 1 -b $CHARACTER_LIMIT)"
+            FEED_CONTENT="$(rsstail -Hd1plru "$RSS_URL" -n 1 -b $CHARACTER_LIMIT)"
             ;;
         *)
-            FEED_CONTENT="$(rsstail -Hd1plu "$1" -n 1 -b $CHARACTER_LIMIT)"
+            FEED_CONTENT="$(rsstail -Hd1plu "$RSS_URL" -n 1 -b $CHARACTER_LIMIT)"
             ;;
     esac
     case $? in
         0)
+            # try to find picture links for thumbnail in embed
+            THUMBNAIL_URL="$(rsstail -d1u "$RSS_URL" -n 1 | grep -om1 'http.*\.png\|http.*\.jpg' | cut -f1 -d' ' | tr -d '"')"
+            # if no THUMBNAIL_URL found, just use AVATAR_URL
+            [ -z "$THUMBNAIL_URL" ] && THUMBNAIL_URL="$AVATAR_URL"
             echo -e "$FEED_CONTENT"
             ;;
         *)
@@ -103,7 +108,10 @@ cat > /tmp/discord-rss.json << EOL
         "title": "$FEED_TITLE",
         "url": "$FEED_LINK",
         "description": "$FEED_DESC",
-        "color": "$FEED_COLOR"
+        "color": "$FEED_COLOR",
+        "thumbnail": {
+          "url": "$THUMBNAIL_URL"
+        }
     }]
 }
 
