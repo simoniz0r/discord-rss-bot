@@ -87,10 +87,6 @@ function getfeed {
     esac
     case $? in
         0)
-            # try to find picture links for thumbnail in embed
-            THUMBNAIL_URL="$(rsstail -d1u "$RSS_URL" -n 1 | grep -om1 'http.*\.png\|http.*\.jpg' | cut -f1 -d' ' | tr -d '"')"
-            # if no THUMBNAIL_URL found, just use AVATAR_URL
-            [ -z "$THUMBNAIL_URL" ] && THUMBNAIL_URL="$AVATAR_URL"
             echo -e "$FEED_CONTENT"
             ;;
         *)
@@ -123,19 +119,25 @@ function postfeed {
     # get feed data for json file using grep and cut
     FEED_TITLE="$(grep -m1 '^Title:' ~/.cache/discord-rss/$FEED_NAME | cut -f2- -d' ' | tr '"' "'")"
     FEED_LINK="$(grep -m1 '^Link:' ~/.cache/discord-rss/$FEED_NAME | cut -f2- -d' ')"
+    # try to find picture links for thumbnail in embed
+    THUMBNAIL_URL="$(rsstail -d1u "$RSS_URL" -n 1 | grep -om1 'http.*\.png\|http.*\.jpg' | cut -f1 -d' ' | tr -d '"')"
+    # if no THUMBNAIL_URL found, just use AVATAR_URL
+    [ -z "$THUMBNAIL_URL" ] && THUMBNAIL_URL="$AVATAR_URL"
     # use grep to get rid of everything except the description then use sed to get rid of the Description label and replace new lines with '\n'
     # also use recode to turn html escapes into normal symbols then use sed to replace a couple of weird ones that recode adds
     case "$FEED_NAME" in
         # get rid of new lines in LWN posts; too messy with them
         LWN)
-            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link' | grep -v '^Pub.date' | sed "s%Description: %%" \
+            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link:' | grep -v '^Pub.date:' | sed "s%Description: %%" \
             | recode h4 | sed 's%â %%g;s%Â%%g' | tr '\n' ' ' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' | sed '/^$/d')"
             ;;
         *)
-            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link' | grep -v '^Pub.date' | sed "s%Description: %%" \
-            | recode h4 | sed 's%^.*%&\\n%g;s%â %%g;s%Â%%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' | sed '/^$/d')"
+            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link:' | grep -v '^Pub.date:' | sed "s%Description: %%" \
+            | recode h4 | sed 's%^.*%&\\n%g;s%â %%g;s%Â%%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' \
+            | sed 's%\\n\\n\\n%\\n%g;s%\\n\\n%\\n%g' | rev | cut -c3- | rev)"
             ;;
     esac
+    # if last character isn't '.', show that article is trunicated
     if [ ! "$(echo $FEED_DESC | tail -n 1 | rev | cut -c1)" = "." ]; then
         FEED_DESC="$FEED_DESC[...]"
     fi
@@ -154,7 +156,7 @@ function postfeed {
     esac
     # rm -f /tmp/discord-rss.json
     # unset used variables
-    unset FEED_TITLE FEED_LINK FEED_DESC
+    unset FEED_TITLE FEED_LINK FEED_DESC THUMBNAIL_URL
 }
 # create /tmp/.discord-rss-bot for while loop
 LOOP_FILE="/tmp/.discord-rss-bot-$RANDOM"
