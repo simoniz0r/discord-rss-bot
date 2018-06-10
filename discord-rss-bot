@@ -120,7 +120,7 @@ function postfeed {
     FEED_TITLE="$(grep -m1 '^Title:' ~/.cache/discord-rss/$FEED_NAME | cut -f2- -d' ' | tr '"' "'")"
     FEED_LINK="$(grep -m1 '^Link:' ~/.cache/discord-rss/$FEED_NAME | cut -f2- -d' ')"
     # try to find picture links for thumbnail in embed
-    THUMBNAIL_URL="$(rsstail -d1u "$RSS_URL" -n 1 | grep -om1 'http.*\.png\|http.*\.jpg' | cut -f1 -d' ' | tr -d '"')"
+    THUMBNAIL_URL="$(rsstail -d1u "$FEED_URL" -n 1 | grep -om1 'http.*\.png\|http.*\.jpg' | cut -f1 -d' ' | tr -d '"')"
     # if no THUMBNAIL_URL found, just use AVATAR_URL
     [ -z "$THUMBNAIL_URL" ] && THUMBNAIL_URL="$AVATAR_URL"
     # use grep to get rid of everything except the description then use sed to get rid of the Description label and replace new lines with '\n'
@@ -138,8 +138,8 @@ function postfeed {
             ;;
     esac
     # if last character isn't '.', show that article is trunicated
-    if [ ! "$(echo $FEED_DESC | tail -n 1 | rev | cut -c1)" = "." ]; then
-        FEED_DESC="$FEED_DESC[...]"
+    if [ $(echo $FEED_DESC | wc -c) -gt 650 ]; then
+        FEED_DESC="$(echo "$FEED_DESC" | rev | cut -f2- -d' ' | rev) [...]"
     fi
     # skip posting certain feeds
     case "$FEED_TITLE" in
