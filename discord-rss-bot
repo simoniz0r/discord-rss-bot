@@ -129,12 +129,12 @@ function postfeed {
         # get rid of new lines in LWN posts; too messy with them
         LWN)
             FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link:' | grep -v '^Pub.date:' | sed "s%Description: %%" \
-            | recode h4 | sed 's%â %%g;s%Â%%g' | tr '\n' ' ' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' | sed '/^$/d')"
+            | recode h4 | sed 's%â %%g;s%Â%%g;s%Ð¡%C%g' | tr '\n' ' ' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' | sed '/^$/d')"
             ;;
         *)
             FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link:' | grep -v '^Pub.date:' | sed "s%Description: %%" \
-            | recode h4 | sed 's%^.*%&\\n%g;s%â %%g;s%Â%%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' \
-            | sed 's%\\n\\n\\n%\\n%g;s%\\n\\n%\\n%g' | rev | cut -c3- | rev)"
+            | recode h4 | sed 's%^.*%&\\n%g;s%â %%g;s%Â%%g;s%Ð¡%C%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' \
+            | sed 's%\\n\\n\\n%\\n%g;s%\\n\\n%\\n%g')"
             ;;
     esac
     # if last character isn't '.', show that article is trunicated
@@ -173,3 +173,4 @@ while [ -f "$LOOP_FILE" ]; do
 done
 echo ""
 exit 0
+
