@@ -15,26 +15,33 @@
 # multiple 'webhook_url's may be specified per RSS feed by separating them with a comma (Ex: webhook_url1,webhook_url2)
 # if 'webhook_url' is not specified in this list, it *MUST* be set to the WEBHOOK_URL variable below the list
 # when the 'webhook_url' is used in the list, a variable may be set per each 'webhook_url' as shown below
-WEBHOOK_NEWS="https://discordapp.com/api/webhooks/channelid/webhooktoken"
-WEBHOOK_GAMES="https://discordapp.com/api/webhooks/channelid2/webhooktoken2"
-RSS_FEEDS="https://www.archlinux.org/feeds/news/|Arch-News|0153255|https://u.teknik.io/7w2Oi.png|$WEBHOOK_NEWS
-https://www.archlinux.org/feeds/packages/x86_64/core/|Arch-Updates|0153255|https://u.teknik.io/7w2Oi.png|$WEBHOOK_NEWS
-https://news.opensuse.org/feed/|openSUSE-News|511020|https://u.teknik.io/4Rvsl.png|$WEBHOOK_NEWS
-http://twfeed.simonizor.net|Tumbleweed|511020|https://u.teknik.io/4Rvsl.png|$WEBHOOK_NEWS
-https://lists.opensuse.org/opensuse-factory/mailinglist.rss|openSUSE-Factory|511020|https://u.teknik.io/4Rvsl.png|$WEBHOOK_NEWS
-http://feeds.feedburner.com/d0od|OMG-Ubuntu|10647351|https://u.teknik.io/SK4CP.png|$WEBHOOK_NEWS
-https://www.phoronix.com/rss.php|Phoronix|6523985|https://u.teknik.io/MH9M4.png|$WEBHOOK_NEWS
-https://nonfree.news/feed.xml|Nonfree-News|11415560|https://u.teknik.io/xwlAU.png|$WEBHOOK_NEWS
-https://fedoramagazine.org/feed/|Fedora-Magazine|4145893|https://u.teknik.io/RKsBb.png|$WEBHOOK_NEWS
-https://voidlinux.eu/atom.xml|Void-News|3563080|https://u.teknik.io/Dx6Jl.png|$WEBHOOK_NEWS
-https://lwn.net/headlines/newrss|LWN|16777021|https://u.teknik.io/h01zz.png|$WEBHOOK_NEWS
-https://www.debian.org/News/news|Debian-News|13041718|https://u.teknik.io/RIcPu.png|$WEBHOOK_NEWS
-https://solus-project.com/categories/news/index.xml|Solus-News|5412066|https://u.teknik.io/A022n.png|$WEBHOOK_NEWS
-https://www.gamingonlinux.com/article_rss.php|GamingOnLinux|93089|https://u.teknik.io/dSsCW.png|$WEBHOOK_GAMES"
-# 'webhook_url' used when not specified in list above; multiple webhook urls may be listed in comma separated formatt
+WEBHOOK_DL="https://discordapp.com/api/webhooks/channelid/webhooktoken"
+WEBHOOK_FACTORY="https://discordapp.com/api/webhooks/channelid2/webhooktoken2"
+WEBHOOK_SUPPORT="https://discordapp.com/api/webhooks/channelid2/webhooktoken3"
+WEBHOOK_HACKER="https://discordapp.com/api/webhooks/channelid2/webhooktoken4"
+WEBHOOK_NEON="https://discordapp.com/api/webhooks/channelid2/webhooktoken5"
+RSS_FEEDS="https://www.archlinux.org/feeds/news/|Arch-News|0153255|https://u.teknik.io/7w2Oi.png|$WEBHOOK_DL
+https://www.archlinux.org/feeds/packages/x86_64/core/|Arch-Updates|0153255|https://u.teknik.io/7w2Oi.png|$WEBHOOK_DL
+https://news.opensuse.org/feed/|openSUSE-News|7584293|https://u.teknik.io/KIQC6.png|$WEBHOOK_DL
+https://www.simonizor.net/tumbleweed-feed.xml|Tumbleweed-Updates|7584293|https://u.teknik.io/4Rvsl.png|$WEBHOOK_DL
+https://lists.opensuse.org/opensuse-factory/mailinglist.rss|openSUSE-Factory|7584293|https://u.teknik.io/4Rvsl.png|$WEBHOOK_FACTORY
+https://lists.opensuse.org/opensuse-support/mailinglist.rss|openSUSE-Support|7584293|https://u.teknik.io/KIQC6.png|$WEBHOOK_SUPPORT
+https://hnrss.org/frontpage?description=0&link=comments|Hacker-News|10647351|https://news.ycombinator.com/y18.gif|$WEBHOOK_HACKER
+https://build.neon.kde.org/view/iso/rssAll|KDE-neon-ISOs|4046989|https://u.teknik.io/3PzMl.png|$WEBHOOK_NEON
+http://feeds.feedburner.com/d0od|OMG-Ubuntu|10647351|https://u.teknik.io/SK4CP.png|$WEBHOOK_DL
+https://www.phoronix.com/rss.php|Phoronix|6523985|https://u.teknik.io/MH9M4.png|$WEBHOOK_DL
+https://nonfree.news/feed.xml|Nonfree-News|11415560|https://u.teknik.io/xwlAU.png|$WEBHOOK_DL
+https://fedoramagazine.org/feed/|Fedora-Magazine|4145893|https://u.teknik.io/RKsBb.png|$WEBHOOK_DL
+https://voidlinux.eu/atom.xml|Void-News|3563080|https://u.teknik.io/Dx6Jl.png|$WEBHOOK_DL
+https://lwn.net/headlines/newrss|LWN|16777021|https://u.teknik.io/h01zz.png|$WEBHOOK_DL
+https://www.debian.org/News/news|Debian-News|13041718|https://u.teknik.io/RIcPu.png|$WEBHOOK_DL
+https://solus-project.com/categories/news/index.xml|Solus-News|5412066|https://u.teknik.io/A022n.png|$WEBHOOK_DL
+https://www.gamingonlinux.com/article_rss.php|GamingOnLinux|93089|https://u.teknik.io/dSsCW.png|$WEBHOOK_DL
+https://xkcd.com/rss.xml|xkcd|93089|https://xkcd.com/s/0b7742.png|$WEBHOOK_DL"
+# 'webhook_url' used when not specified in list above; multiple webhook urls may be listed in comma separated format
 WEBHOOK_URL="webhook_url1,webhook_url2"
 # time to sleep between checking feeds
-RSS_CHECK_TIME=300
+RSS_CHECK_TIME=180
 # max amount of characters to be sent in embed description (Discord's max is 2048)
 CHARACTER_LIMIT=700
 # run a for loop that checks the Pub.date of each feed in RSS_FEEDS
@@ -78,8 +85,12 @@ function getfeed {
     local RSS_URL="$1"
     # reverse output for feeds that are weird and backwards
     case "$FEED_NAME" in
-        openSUSE-Factory)
+        openSUSE-Factory|openSUSE-Support)
             FEED_CONTENT="$(rsstail -Hd1plru "$RSS_URL" -n 1 -b $CHARACTER_LIMIT)"
+            ;;
+        # use raw HTML for xkcd
+        xkcd)
+            FEED_CONTENT="$(rsstail -d1plu "$RSS_URL" -n 1 -b $CHARACTER_LIMIT)"
             ;;
         *)
             FEED_CONTENT="$(rsstail -Hd1plu "$RSS_URL" -n 1 -b $CHARACTER_LIMIT)"
@@ -105,7 +116,7 @@ cat > /tmp/discord-rss.json << EOL
         "url": "$FEED_LINK",
         "description": "$FEED_DESC",
         "color": "$FEED_COLOR",
-        "thumbnail": {
+        "$IMAGE_TYPE": {
           "url": "$THUMBNAIL_URL"
         }
     }]
@@ -122,22 +133,32 @@ function postfeed {
     # try to find picture links for thumbnail in embed
     THUMBNAIL_URL="$(rsstail -d1u "$FEED_URL" -n 1 | grep -om1 'http.*\.png\|http.*\.jpg' | cut -f1 -d' ' | tr -d '"')"
     # if no THUMBNAIL_URL found, just use AVATAR_URL
-    [ -z "$THUMBNAIL_URL" ] && THUMBNAIL_URL="$AVATAR_URL"
+    if [ -z "$THUMBNAIL_URL" ]; then
+        THUMBNAIL_URL="$AVATAR_URL"
+        IMAGE_TYPE="thumbnail"
+    else
+        IMAGE_TYPE="image"
+    fi
     # use grep to get rid of everything except the description then use sed to get rid of the Description label and replace new lines with '\n'
     # also use recode to turn html escapes into normal symbols then use sed to replace a couple of weird ones that recode adds
     case "$FEED_NAME" in
         # get rid of new lines in LWN posts; too messy with them
         LWN)
-            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link:' | grep -v '^Pub.date:' | sed "s%Description: %%" \
-            | recode h4 | sed 's%â %%g;s%Â%%g;s%Ð¡%C%g' | tr '\n' ' ' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' | sed '/^$/d')"
+            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link:' | grep -v '^Pub.date:' | sed "s%Description: %%" | tr '\n' ' ' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' | sed '/^$/d')"
+            ;;
+        # find description from HTML for xkcd
+        xkcd)
+            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link:' | grep -v '^Pub.date:' | sed "s%Description: %%" | cut -f4 -d'"' | recode h4 | sed 's%^.*%&\\n%g;s%â..%%g;s%Â%%g;s%Ð¡%C%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' | sed 's%\\n\\n\\n%\\n%g;s%\\n\\n%\\n%g')"
+            ;;
+        # don't use recode on feeds that don't need it as it messes up some foreign characters
+        Phoronix|openSUSE-Factory|openSUSE-Support)
+            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link:' | grep -v '^Pub.date:' | sed "s%Description: %%" | sed 's%^.*%&\\n%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ' | tr -d '\r')"
             ;;
         *)
-            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link:' | grep -v '^Pub.date:' | sed "s%Description: %%" \
-            | recode h4 | sed 's%^.*%&\\n%g;s%â %%g;s%Â%%g;s%Ð¡%C%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' \
-            | sed 's%\\n\\n\\n%\\n%g;s%\\n\\n%\\n%g')"
+            FEED_DESC="$(cat ~/.cache/discord-rss/$FEED_NAME | grep -v '^Title:' | grep -v '^Link:' | grep -v '^Pub.date:' | sed "s%Description: %%" | recode h4 | sed 's%^.*%&\\n%g;s%â..%%g;s%Â%%g;s%Ð¡%C%g' | tr -d '\n' | tr '"' "'" | tr '\t' ' ' | tr -d '\r' | sed 's%\\n\\n\\n%\\n%g;s%\\n\\n%\\n%g')"
             ;;
     esac
-    # if last character isn't '.', show that article is trunicated
+    # check amount of characters; assume that more than 650 is trunicated and add '[...]'
     if [ $(echo $FEED_DESC | wc -c) -gt 650 ]; then
         FEED_DESC="$(echo "$FEED_DESC" | rev | cut -f2- -d' ' | rev) [...]"
     fi
@@ -152,6 +173,7 @@ function postfeed {
             createjson
             # use curl to send /tmp/discord-rss.json to WEBHOOK_URL
             curl -iL -X POST -H "Content-Type: application/json" -T "/tmp/discord-rss.json" "$UPLOAD_URL" || echo "Upload failed"
+            echo
             ;;
     esac
     # rm -f /tmp/discord-rss.json
@@ -173,4 +195,3 @@ while [ -f "$LOOP_FILE" ]; do
 done
 echo ""
 exit 0
-
