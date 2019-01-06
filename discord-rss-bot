@@ -23,7 +23,7 @@ function checkfeeds {
         # get NEW_POST_LINK for feed using getfeed function, grep, and cut
         NEW_POST_LINK="$(getfeed $FEED_URL | grep -m1 '^Link:' | cut -f2- -d' ')"
         # if NEW_POST_LINK not empty and does not match POST_LINK, write latest entry to ~/.cache/discord-rss/$FEED_NAME
-        if [[ ! -z "$NEW_POST_LINK" ]] && [[ ! "$NEW_POST_LINK" = "$POST_LINK" ]]; then
+        if [[ ! -z "$NEW_POST_LINK" ]] && [[ ! "$NEW_POST_LINK" == "$POST_LINK" ]]; then
             echo "[$(date +'%D %T')] New post in $BOT_USERNAME"
             getfeed "$FEED_URL" > ~/.cache/discord-rss/"$FEED_NAME"
             # run a for loop to post to multiple webhook urls if present
@@ -107,7 +107,7 @@ function postfeed {
         THUMBNAIL_URL="https://dummyimage.com/1x1/000/fff"
         IMAGE_TYPE="thumbnail"
     else
-        if [[ "$FEED_NAME" = "xkcd" ]]; then
+        if [[ "$FEED_NAME" == "xkcd" ]]; then
             IMAGE_TYPE="image"
         else
             IMAGE_TYPE="thumbnail"
