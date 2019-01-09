@@ -135,7 +135,7 @@ function postfeed {
     # skip posting certain feeds
     case "$FEED_TITLE" in
         # dont post LWN.net paid articles
-        \[\$\]*|*2018*)
+        \[\$\]*)
             echo "[$(date +'%D %T')] Skipping feed $BOT_USERNAME title $FEED_TITLE"
             ;;
         *)
